@@ -1,0 +1,15 @@
+projects:
+  tractus:
+    schemaPath: src/graphql/schema.json
+    includes:
+      - src/graphql/**/*.js
+    excludes:
+      - ./amplify/**
+    extensions:
+      amplify:
+        codeGenTarget: javascript
+        generatedFileName: ''
+        docsFilePath: src/graphql
+        region: ap-southeast-1
+        apiId: rqyhvigoivfh3eyz57r6a443qq
+        maxDepth: 2
