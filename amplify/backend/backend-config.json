@@ -1,1 +1,9 @@
-{}
+{
+	"auth": {
+		"tractusAuth": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	}
+}

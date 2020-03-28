@@ -1,15 +1,22 @@
 {
     "dev": {
         "awscloudformation": {
-            "AuthRoleName": "amplify-tractus-app-dev-224002-authRole",
-            "UnauthRoleArn": "arn:aws:iam::990138122148:role/amplify-tractus-app-dev-224002-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::990138122148:role/amplify-tractus-app-dev-224002-authRole",
+            "AuthRoleName": "amplify-tractus-dev-224607-authRole",
+            "UnauthRoleArn": "arn:aws:iam::990138122148:role/amplify-tractus-dev-224607-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::990138122148:role/amplify-tractus-dev-224607-authRole",
             "Region": "ap-southeast-1",
-            "DeploymentBucketName": "amplify-tractus-app-dev-224002-deployment",
-            "UnauthRoleName": "amplify-tractus-app-dev-224002-unauthRole",
-            "StackName": "amplify-tractus-app-dev-224002",
-            "StackId": "arn:aws:cloudformation:ap-southeast-1:990138122148:stack/amplify-tractus-app-dev-224002/5ec7b690-565f-11ea-8e69-06679e986658",
-            "AmplifyAppId": "d1ysbgfc8428ur"
+            "DeploymentBucketName": "amplify-tractus-dev-224607-deployment",
+            "UnauthRoleName": "amplify-tractus-dev-224607-unauthRole",
+            "StackName": "amplify-tractus-dev-224607",
+            "StackId": "arn:aws:cloudformation:ap-southeast-1:990138122148:stack/amplify-tractus-dev-224607/88243830-6f85-11ea-a36f-021581161e74",
+            "AmplifyAppId": "d1ps76l8ao3fz2"
+        },
+        "categories": {
+            "auth": {
+                "tractusAuth": {
+                    "hostedUIProviderCreds": "[]"
+                }
+            }
         }
     }
 }

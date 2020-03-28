@@ -1,3 +1,4 @@
+import { withAuthenticator } from 'aws-amplify-react';
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
@@ -13,6 +14,9 @@ import Table from 'react-bootstrap/Table';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 
+Amplify.configure(awsmobile);
+
+
 class App extends React.Component {
   // define some state to hold the data returned from the API
 
@@ -24,8 +28,11 @@ class App extends React.Component {
 
   // execute the query in componentDidMount
   async componentDidMount() {
+
+
+    //fetch task assigned to user and store in state
     try {
-      Amplify.configure(awsmobile);
+
       const inputData = { $limit: 10} ;
       const mytaskData = await API.graphql(graphqlOperation(queries.listFromToMessages, inputData ));
       console.log('mytaskData:', mytaskData)
@@ -37,9 +44,9 @@ class App extends React.Component {
     }
 
 
-
+    //fetch task assigned to others and store in state
     try {
-      Amplify.configure(awsmobile);
+      //Amplify.configure(awsmobile);
       const inputData = { $limit: 10} ;
       const mytaskData = await API.graphql(graphqlOperation(mutations.createFromToMessage, inputData ));
       console.log('mytaskData:', mytaskData)
@@ -121,4 +128,6 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default withAuthenticator(App,{
+                // Render a sign out button once   logged in
+                includeGreetings: true} );
