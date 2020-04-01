@@ -1,4 +1,15 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project aim at creating a task manager React application that provides following actions: 
+
+- display of tasks assgined to yourself 
+- dislpay of tasks assigned by you to others
+- CRUD operations of the Tasks i.e creating a task, deleting a task etc
+
+## Architecture 
+
+- Dynamodb acts as data storage systema that stores all the task related data in single table 
+- AppSync API that provides grapql endpoint to connect to Dynamodb 
+- Cognito User Pool to provide authentication and authorization for the users over Appsync API calls 
+
 
 ## Available Scripts
 
