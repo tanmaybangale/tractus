@@ -3,7 +3,9 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import apiCalls from './asyncFunctn';
-import Amplify, { API, graphqlOperation } from 'aws-amplify';
+import Amplify, { API, Auth, graphqlOperation } from 'aws-amplify';
+import gql from 'graphql-tag';
+import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
 import awsmobile from './aws-exports';
 import * as queries from './graphql/queries';
 import * as mutations from './graphql/mutations';
@@ -17,13 +19,28 @@ import Tab from 'react-bootstrap/Tab';
 Amplify.configure(awsmobile);
 
 
+const client = new AWSAppSyncClient({
+  url: awsmobile.aws_appsync_graphqlEndpoint,
+  region: awsmobile.aws_appsync_region,
+  auth: {
+    type: awsmobile.aws_appsync_authenticationType,
+    jwtToken: async () => (await Auth.currentSession()).getIdToken().getJwtToken(),
+  },
+});
+
+
+
+
+
+
 class App extends React.Component {
   // define some state to hold the data returned from the API
 
 
 
   state = {
-    mytasks: []
+    mytasks: [],
+    othertasks : []
   };
 
   // execute the query in componentDidMount
@@ -31,31 +48,47 @@ class App extends React.Component {
 
 
     //fetch task assigned to user and store in state
-    try {
 
-      const inputData = { $limit: 10} ;
-      const mytaskData = await API.graphql(graphqlOperation(queries.listFromToMessages, inputData ));
-      console.log('mytaskData:', mytaskData)
+    try {
+      //const inputData = { $limit: 10} ;
+      await client.query({
+      query: gql(queries.listToFromMessages)
+      }).then(({ data: { listToFromMessages } }) => {
+      //console.log(listToFromMessages.items);
       this.setState({
-        mytasks: mytaskData.data.listFromToMessages.items
+        mytasks: listToFromMessages.items
       })
+      //console.log(this.state.mytasks);
+      });
+
     } catch (err) {
       console.log('error fetching talks...', err)
     }
 
 
     //fetch task assigned to others and store in state
+
     try {
-      //Amplify.configure(awsmobile);
-      const inputData = { $limit: 10} ;
-      const mytaskData = await API.graphql(graphqlOperation(mutations.createFromToMessage, inputData ));
-      console.log('mytaskData:', mytaskData)
+
+      console.log("entered")
+      //const inputData = { $limit: 10} ;
+      await client.query({
+      query: gql(queries.listFromToMessages)
+      }).then(({ data: { listFromToMessages } }  ) => {
+      //console.log(listFromToMessages.items);
       this.setState({
-        mytasks: mytaskData.data.listFromToMessages.items
+        othertasks: listFromToMessages.items
       })
+      //console.log(this.state.othertasks);
+      });
+
     } catch (err) {
-      console.log('error adding tasks...', err)
+      console.log('error fetching talks...', err)
     }
+
+
+
+
 
 
 
@@ -77,12 +110,12 @@ class App extends React.Component {
          <tbody>
 
         {
-          this.state.mytasks.map((task, index) => (
+          this.state.mytasks.map((mytask, indexone) => (
 
-      <tr key = {index}>
-        <td> {index} </td>
-        <td> {task.from}  </td>
-        <td> {task.message}</td>
+      <tr key = {indexone}>
+        <td> {indexone} </td>
+        <td> {mytask.from}  </td>
+        <td> {mytask.message}</td>
       </tr>
 
           ))
@@ -98,18 +131,18 @@ class App extends React.Component {
         <thead>
           <tr>
             <th>#</th>
-            <th>From</th>
+            <th>To</th>
             <th>Message</th>
           </tr>
          </thead>
         <tbody>
 
        {
-         this.state.mytasks.map((task, index) => (
+         this.state.othertasks.map((task, index) => (
 
      <tr key = {index} >
        <td> {index} </td>
-       <td> {task.from}  </td>
+       <td> {task.to}  </td>
        <td> {task.message}</td>
      </tr>
 
@@ -130,4 +163,5 @@ class App extends React.Component {
 
 export default withAuthenticator(App,{
                 // Render a sign out button once   logged in
+                usernameAttributes: 'email',
                 includeGreetings: true} );
