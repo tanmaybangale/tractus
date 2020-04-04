@@ -15,6 +15,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Table from 'react-bootstrap/Table';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
+import Button from 'react-bootstrap/Button';
 
 Amplify.configure(awsmobile);
 
@@ -36,12 +37,19 @@ const client = new AWSAppSyncClient({
 class App extends React.Component {
   // define some state to hold the data returned from the API
 
-
+  constructor(props) {
+   super(props);
+   //this.handleMinus = this.handleMinus.bind(this);
+ }
 
   state = {
     mytasks: [],
     othertasks : []
   };
+
+  handleMinus(){
+  console.log('We need to get the details for ');
+}
 
   // execute the query in componentDidMount
   async componentDidMount() {
@@ -70,7 +78,7 @@ class App extends React.Component {
 
     try {
 
-      console.log("entered")
+      //console.log("entered")
       //const inputData = { $limit: 10} ;
       await client.query({
       query: gql(queries.listFromToMessages)
@@ -88,10 +96,6 @@ class App extends React.Component {
 
 
 
-
-
-
-
   }
   render() {
     return (
@@ -103,6 +107,7 @@ class App extends React.Component {
          <thead>
            <tr>
              <th>#</th>
+             <th>Action</th>
              <th>From</th>
              <th>Message</th>
            </tr>
@@ -113,7 +118,8 @@ class App extends React.Component {
           this.state.mytasks.map((mytask, indexone) => (
 
       <tr key = {indexone}>
-        <td> {indexone} </td>
+        <td> {indexone+1} </td>
+        <td> <Button data-item={mytask.id} variant="secondary" size="sm" onClick={this.handleMinus.bind(this,mytask.id)} >-</Button> </td>
         <td> {mytask.from}  </td>
         <td> {mytask.message}</td>
       </tr>
@@ -146,7 +152,7 @@ class App extends React.Component {
        <td> {task.message}</td>
      </tr>
 
-         ))
+   ))
        }
 
      </tbody>
@@ -157,8 +163,13 @@ class App extends React.Component {
         </Tab>
     </Tabs>
     </>
-    )
+  )
   }
+
+
+
+
+
 }
 
 export default withAuthenticator(App,{
