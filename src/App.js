@@ -47,9 +47,41 @@ class App extends React.Component {
     othertasks : []
   };
 
-  handleMinus(){
-  console.log('We need to get the details for ');
+  deleteItemFromState(id) {
+  const updatedTasks = this.state.othertasks.filter(task => task.id !== id)
+  this.setState({ othertasks: updatedTasks })
+
+
+
 }
+
+//handle minus of a task assigned to others
+// remove from current state othertasks and then gql to remove from database
+  handleMinus(id,from){
+  console.log('We need to get the details for ' + id);
+  this.deleteItemFromState(id)
+  console.log("going for db delete");
+  client.mutate({
+    mutation: gql(mutations.deleteFromToMessages),
+    variables: {
+      input: {
+        id: id,
+        from: from
+      }
+    }}).then((data) => {
+   console.log('Data from handleMinus()/deleteFromToMessages with async ( When promise gets resolved ): ' + data);
+ }).catch((error) => {
+   console.log('Error from handleMinus()/deleteFromToMessages with async( When promise gets rejected ): ' + error);
+ });
+}
+  handleAdd(){
+    console.log("pressed");
+
+  }
+
+
+
+
 
   // execute the query in componentDidMount
   async componentDidMount() {
@@ -70,7 +102,7 @@ class App extends React.Component {
       });
 
     } catch (err) {
-      console.log('error fetching talks...', err)
+      console.log('error fetching listToFromMessages...', err)
     }
 
 
@@ -95,6 +127,31 @@ class App extends React.Component {
     }
 
 
+    //testing subscriptions
+    try {
+
+      //console.log("entered")
+      //const inputData = { $limit: 10} ;
+      await client.subscribe({
+      query: gql(subscriptions.onDeleteFromToMessages)
+      }).subscribe({
+    next: data => {
+      console.log(data.data.onDeleteFromToMessages);
+    },
+    error: error => {
+      console.warn(error);
+    }
+  });
+
+    } catch (err) {
+      console.log('error fetching talks...', err)
+    }
+
+
+
+
+
+
 
   }
   render() {
@@ -107,7 +164,6 @@ class App extends React.Component {
          <thead>
            <tr>
              <th>#</th>
-             <th>Action</th>
              <th>From</th>
              <th>Message</th>
            </tr>
@@ -119,7 +175,6 @@ class App extends React.Component {
 
       <tr key = {indexone}>
         <td> {indexone+1} </td>
-        <td> <Button data-item={mytask.id} variant="secondary" size="sm" onClick={this.handleMinus.bind(this,mytask.id)} >-</Button> </td>
         <td> {mytask.from}  </td>
         <td> {mytask.message}</td>
       </tr>
@@ -128,15 +183,17 @@ class App extends React.Component {
         }
 
       </tbody>
-
       </Table>
         </Tab>
+
+
         <Tab eventKey="othertasks" title="Other Tasks">
 
         <Table striped bordered hover>
         <thead>
           <tr>
             <th>#</th>
+            <th>Action</th>
             <th>To</th>
             <th>Message</th>
           </tr>
@@ -148,6 +205,7 @@ class App extends React.Component {
 
      <tr key = {index} >
        <td> {index} </td>
+       <td> <Button data-item={task.id} variant="secondary" size="sm" onClick={this.handleMinus.bind(this,task.id, task.from)} >-</Button> </td>
        <td> {task.to}  </td>
        <td> {task.message}</td>
      </tr>
@@ -159,16 +217,13 @@ class App extends React.Component {
 
      </Table>
 
+    <Button data-item="add-item" variant="primary" onClick={this.handleAdd.bind(this)}>Add Task for Others</Button>
+    </Tab>
 
-        </Tab>
     </Tabs>
     </>
   )
   }
-
-
-
-
 
 }
 
