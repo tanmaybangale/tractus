@@ -1,7 +1,7 @@
 This project aim at creating a task manager React application that provides following actions: 
 
-- display of tasks assgined to yourself 
-- dislpay of tasks assigned by you to others
+- display of tasks assigned to yourself 
+- display of tasks assigned by you to others
 - CRUD operations of the Tasks i.e creating a task, deleting a task etc
 
 ## Architecture 
