@@ -10,6 +10,6 @@ projects:
         codeGenTarget: javascript
         generatedFileName: ''
         docsFilePath: src/graphql
-        region: ap-southeast-1
-        apiId: ubpisostbjbhhcefz3lqhxqzlm
+        region: ap-xxeast-1
+        apiId: ubpisoxxxz3lqhxqzlm
         maxDepth: 2
